@@ -119,9 +119,21 @@
         </div>
     </div>
 
-    <script>
-      
-        function toggleForms() {
+    <script>//script 可以用于外部引用，就类似于java'的类引用   举例 <script scr = " js/dem.js "></script>   整个<script>的基本语法跟java大差不差，个别的我会注释
+      //write 和log 都可输出语句，这两个都是简写 ，log 是在浏览器控制台输出，write则是在浏览器输出
+      //注意跟java区别  var是声明变量 且可直接由整数变为字符串    var是全局变量    let为局部变量，可用于区块  
+
+
+      //const 为只读常量  一经声明，无法改变
+        function toggleForms() {  //function 定义一个函数 后面跟形参列表 toggleForms 为函数名 （） 为空形参，就是没有初始参数
+            //java区别 ，形参无类型，且  return也不需要
+
+           //函数调用 如果有返回值  举列子  有函数  function toggleForms( a,b ){   return }
+           //调用 var （a,b） = toggleForms (a,b)
+           //无需跟返回值，且可循环调用
+
+
+
             const loginForm = document.getElementById('login-form'); 
             const registerForm = document.getElementById('register-form'); 
 
@@ -150,7 +162,7 @@
 
             
             if (!username || !email || !password || !confirmPassword) {
-                alert('请填写所有字段。'); // 如果有字段为空，弹出提示
+                alert('请填写所有字段。'); // 如果有字段为空，弹出提示    alert 是用于输出字符的，类似于java的 System，但是是出现警告框，可以在任意位置出现，完整写法是window.alert
                 return;
             }
 
