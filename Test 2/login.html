@@ -6,9 +6,8 @@
     <title>用户登录与注册</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-
         body {
-            font-family: Arial, sans-serif;//页面布局
+            font-family: Arial, sans-serif;
             background-image: url('preview.jpg');
             background-size: cover;
             display: flex;
@@ -193,25 +192,27 @@
             return;
         }
 
-        $.ajax({
-            url: '/dmo2_war_exploded/login', //  Servlet 登录 API 的路径
-            type: 'POST',
-            data: {
-                username: username,
-                password: password
-            },
-            success: function(response) {
-                if (response.success) {
-                    alert('登录成功！');
-                    window.location.href = "/dmo2_war_exploded/index.html"; // 登录成功后跳转的页面
-                } else {
-                    $('#loginMessage').text('登录失败：' + response.message);
-                }
-            },
-            error: function() {
-                $('#loginMessage').text('登录请求失败，请稍后再试。');
-            }
-        });
+        // 随机提示结果
+        const loginMessages = [
+            '登录成功！',
+            '密码错误，请重试。',
+            '用户名不存在，请注册。',
+            '服务器忙，请稍后重试。',
+            '账户已锁定，请联系管理员。',
+            '登录失败，网络问题。'
+        ];
+
+        // 生成随机提示
+        const randomIndex = Math.floor(Math.random() * loginMessages.length);
+        const randomMessage = loginMessages[randomIndex];
+
+        // 模拟登录结果
+        if (randomMessage === '登录成功！') {
+            alert(randomMessage);
+            window.location.href = "/dmo2_war_exploded/index.html"; // 登录成功跳转页面
+        } else {
+            document.getElementById('loginMessage').textContent = randomMessage;
+        }
     }
 </script>
 </body>
