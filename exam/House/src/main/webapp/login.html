@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('preview.jpg');
+            background-image: url('fig/preview.jpg');
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -143,14 +143,45 @@
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
 
-        loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
-        registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
+        if (loginForm.style.display === 'none') {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        } else {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        }
     }
+
+    /*  toggleForms 函数  功能：切换登录表单和注册表单的显示状态
+     获取登录表单和注册表单的 DOM 元素。
+     检查当前登录表单的显示状态：
+     如果登录表单隐藏，则显示登录表单并隐藏注册表单。
+    如果登录表单显示，则隐藏登录表单并显示注册表单。
+     */
+
+
+
 
     function validateEmail(email) {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     }
+
+    /*
+    ValidateEmail 函数  功能：验证邮箱格式是否正确。
+     执行流程：
+    定义正则表达式 regex：
+     匹配非空白字符组成的用户名部分。
+     包含 @ 符号。
+    匹配非空白字符的域名部分，最后是一个 . 后的域名后缀。
+    使用 test 方法验证邮箱是否符合格式。
+    返回 true（格式正确）或 false（格式错误）。
+      示例验证：
+     如果输入：example@example.com
+      输出为：true
+    */
+
+
 
     function register() {
         const username = document.getElementById('register-username').value;
@@ -177,6 +208,20 @@
         alert('注册成功！');
         toggleForms();
     }
+   /*
+     register 函数 功能：处理用户注册逻辑。
+    获取注册表单中的输入值：
+     username：用户名。
+    email：邮箱地址。
+    password：密码。
+    confirmPassword：确认密码。
+    userNeeds：用户需求（如租房、出租、游客）。
+    验证输入内容：
+    检查是否有未填写的字段。
+    验证邮箱格式是否正确。
+    检查密码和确认密码是否一致。
+    如果所有验证通过，提示“注册成功”并调用 toggleForms 切换到登录表单。
+    */
 
     function login() {
         const username = document.getElementById('login-username').value;
@@ -187,31 +232,48 @@
             return;
         }
 
-        // 模拟后端登录逻辑
-        const loginMessages = [
-            "登录成功！",
-            "密码错误，请重试。",
-            "用户名不存在，请注册。",
-            "服务器忙，请稍后重试。",
-            "账户已锁定，请联系管理员。",
-            "登录失败，网络问题。"
-        ];
+        fetch('/dmo2_war_exploded/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // 显示成功消息
+                    window.location.href = "/dmo2_war_exploded/Home.html"; // 确保跳转到正确的页面
+                } else {
+                    document.getElementById('loginMessage').textContent = data.message; // 显示错误消息
+                }
 
-        const randomIndex = Math.floor(Math.random() * loginMessages.length);
-        const randomMessage = loginMessages[randomIndex];
-
-        if (randomMessage === "登录成功！") {
-            // 验证用户名密码是否正确
-            if (username === "zcj" && password === "123456") {
-                alert(randomMessage);
-                window.location.href = "/dmo2_war_exploded/Home.html";
-            } else {
-                alert("用户名或密码错误");
-            }
-        } else {
-            document.getElementById('loginMessage').textContent = randomMessage;
-        }
+            })
+            .catch(error => console.error('Error:', error));
     }
+
+
+   /*login 函数
+    功能：处理用户登录逻辑
+     获取登录表单中的输入值：
+   username：用户名。
+   password：密码。
+   验证输入内容：
+   如果任何字段为空，提示“请填写所有字段”并终止执行。
+   模拟登录逻辑：
+   定义一个登录提示消息数组 loginMessages。
+   随机生成一个索引 randomIndex。
+   根据随机索引选择一个提示消息 randomMessage。
+   根据随机消息的内容：
+   如果消息是“登录成功！”，提示并跳转到首页 /dmo2_war_exploded/Home.html。
+   否则，在页面显示相应的错误消息。
+
+   判断逻辑在  LoginServlet  后端文件中
+
+
+    */
+
+
+
+
 </script>
-</body> 
+</body>
 </html>

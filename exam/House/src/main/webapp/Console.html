@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房屋管理系统统计面板</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+    }
+
+    .dashboard-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 30px auto;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .stat {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .stat h3 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .stat p {
+      font-size: 32px;
+      font-weight: bold;
+      color: #007bff;
+      margin: 0;
+    }
+
+    .stat p span {
+      font-size: 16px;
+      color: #666;
+    }
+
+    /* 提供一些高亮的背景颜色 */
+    .stat:nth-child(1) {
+      background-color: #e3f2fd;
+    }
+
+    .stat:nth-child(2) {
+      background-color: #e8f5e9;
+    }
+
+    .stat:nth-child(3) {
+      background-color: #fff3e0;
+    }
+
+    .stat:nth-child(4) {
+      background-color: #fbe9e7;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>房屋管理系统统计面板</h1>
+  </div>
+
+  <div class="dashboard">
+    <div class="stat">
+      <h3>成交数量</h3>
+      <p id="transaction-count">0 <span>单</span></p>
+    </div>
+    <div class="stat">
+      <h3>用户访问量</h3>
+      <p id="user-visits">229 <span>次</span></p>
+    </div>
+    <div class="stat">
+      <h3>现有房型</h3>
+      <p id="house-count">0 <span>套</span></p>
+    </div>
+    <div class="stat">
+      <h3>新增用户</h3>
+      <p id="new-user-count"> 8 <span>人</span></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  fetch('/dmo2_war_exploded/get-stats')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('transaction-count').innerText = data.totalTransactions ?? 0;
+            document.getElementById('user-visits').innerText = data.totalVisits ?? 0;
+            document.getElementById('house-count').innerText = data.totalHouses ?? 0;
+            document.getElementById('new-user-count').innerText = data.newUserCount ?? 0;
+          })
+          .catch(error => {
+            console.error("Error fetching stats:", error);
+          });
+
+  updateStats();
+</script>
+</body>
+</html>

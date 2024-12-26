@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能实现与文件梳理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        .section {
+            margin-bottom: 40px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .section h2 {
+            text-align: center;
+            color: #34495e;
+        }
+        .section img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section p {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>系统功能实现与文件梳理</h1>
+
+    <!-- 功能实现部分 -->
+    <div class="section">
+        <h2>功能实现流程图</h2>
+        <img src="fig/tu1.png" alt="功能实现流程图">
+        <p>上图展示了系统的功能实现流程，包括登录、主页功能和管理员功能等。</p>
+    </div>
+
+    <!-- 文件梳理部分 -->
+    <div class="section">
+        <h2>前后端文件梳理</h2>
+        <img src="fig/tu2.png" alt="前后端文件梳理图">
+        <p>此部分用于展示前后端文件的梳理情况，帮助理解项目结构。</p>
+
+    </div>
+
+    <h3>下一步计划</h3>
+    <div style="background-color: #f4f6f9; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); line-height: 1.6;">
+        <ol style="margin: 0; padding-left: 20px; color: #34495e; font-size: 16px;">
+            <li>
+                <b>登录与注册功能：</b>由于未连接数据库的原因，登录和注册依旧是死数据，
+                且目前前后端未完全分离。在登录功能的前端文件中，有一些未分离出去的后端文件。
+            </li>
+            <li>
+                <b>房屋管理数据：</b>房屋管理的数据未能连接数据库。准备加入数据库，
+                测试系统在连接数据库后对主要功能的完善。
+            </li>
+            <li>
+                <b>移动端开发：</b>计划加入移动端开发，目前尚未开始。
+            </li>
+        </ol>
+    </div>
+
+
+
+</div>
+</body>
+</html>

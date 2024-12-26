@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房屋管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background: #fff;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input,
+        .search-bar select,
+        .search-bar button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-bar button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .carousel img {
+            width: 80px;
+            height: 60px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .carousel img:hover {
+            transform: scale(1.1);
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .add-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .add-button:hover {
+            background-color: #218838;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+
+        .modal-content h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .modal-content .save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .modal-content .save:hover {
+            background-color: #218838;
+        }
+
+        .modal-content .cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal-content .cancel:hover {
+            background-color: #c82333;
+        }
+
+        .alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .alert.error {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>房屋管理</h1>
+
+    <!-- 筛选表单 -->
+    <div class="search-bar">
+        <input type="text" id="search-address" placeholder="按地址查询">
+        <input type="number" id="search-id" placeholder="按编号查询">
+        <input type="number" id="min-price" placeholder="最低价格">
+        <input type="number" id="max-price" placeholder="最高价格">
+        <select id="price-order">
+            <option value="">价格排序</option>
+            <option value="asc">低价优先</option>
+            <option value="desc">高价优先</option>
+        </select>
+        <button onclick="fetchHouses()">查询</button>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>房屋编号</th>
+            <th>房屋地址</th>
+            <th>出租价格</th>
+            <th>联系电话</th>
+            <th>房屋图片</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="house-list">
+        </tbody>
+    </table>
+
+    <button class="add-button" onclick="openModal()">新增房屋</button>
+</div>
+
+<!-- 弹窗 -->
+<div class="modal" id="add-house-modal">
+    <div class="modal-content">
+        <h2>新增房屋</h2>
+        <label for="house-id">房屋编号</label>
+        <input type="number" id="house-id" placeholder="请输入房屋编号">
+
+        <label for="house-address">房屋地址</label>
+        <input type="text" id="house-address" placeholder="请输入房屋地址">
+
+        <label for="house-price">出租价格</label>
+        <input type="number" id="house-price" placeholder="请输入价格">
+
+        <label for="house-contact">联系电话</label>
+        <input type="text" id="house-contact" placeholder="请输入联系电话">
+
+        <label for="house-image">房屋图片 URL（多个以逗号分隔）</label>
+        <input type="text" id="house-image" placeholder="请输入图片 URL">
+
+        <button class="save" onclick="addHouse()">保存</button>
+        <button class="cancel" onclick="closeModal()">取消</button>
+    </div>
+</div>
+
+<div class="alert" id="alert-box"></div>
+
+<script>
+    function showAlert(message, isError = false) {
+        const alertBox = document.getElementById('alert-box');
+        alertBox.textContent = message;
+        alertBox.className = `alert ${isError ? 'error' : ''}`;
+        alertBox.style.display = 'block';
+
+        setTimeout(() => {
+            alertBox.style.display = 'none';
+        }, 3000);
+    }
+
+    function fetchHouses() {
+        const address = document.getElementById('search-address').value;
+        const id = document.getElementById('search-id').value;
+        const minPrice = document.getElementById('min-price').value;
+        const maxPrice = document.getElementById('max-price').value;
+        const priceOrder = document.getElementById('price-order').value;
+
+        const queryParams = new URLSearchParams();
+        if (address) queryParams.append('address', address);
+        if (id) queryParams.append('id', id);
+        if (minPrice) queryParams.append('minPrice', minPrice);
+        if (maxPrice) queryParams.append('maxPrice', maxPrice);
+        if (priceOrder) queryParams.append('priceOrder', priceOrder);
+
+        fetch(`/dmo2_war_exploded/get-houses?${queryParams.toString()}`)
+            .then(response => response.json())
+            .then(data => renderHouses(data))
+            .catch(() => showAlert('获取房屋数据失败', true));
+    }
+
+    function renderHouses(houses) {
+        const houseList = document.getElementById('house-list');
+        houseList.innerHTML = '';
+        houses.forEach(house => {
+            const carousel = house.imageUrls.map(img => `<img src="${img}" alt="房屋图片" onerror="this.src='https://via.placeholder.com/80';">`).join('');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${house.id}</td>
+                <td>${house.address}</td>
+                <td>¥${house.price.toFixed(2)}</td>
+                <td>${house.contact}</td>
+                <td class="carousel">${carousel}</td>
+                <td>
+                    <button class="delete-button" onclick="confirmDelete(${house.id})">删除</button>
+                </td>
+            `;
+            houseList.appendChild(row);
+        });
+    }
+
+    function confirmDelete(id) {
+        if (confirm('确定要删除该房屋吗？')) {
+            deleteHouse(id);
+        }
+    }
+
+    function deleteHouse(id) {
+        fetch(`/dmo2_war_exploded/get-houses?id=${id}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    fetchHouses();
+                    showAlert('房屋删除成功！');
+                } else {
+                    showAlert('删除房屋失败', true);
+                }
+            })
+            .catch(() => showAlert('删除失败', true));
+    }
+
+    function openModal() {
+        document.getElementById('add-house-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('add-house-modal').style.display = 'none';
+    }
+
+    function addHouse() {
+        const id = document.getElementById('house-id').value;
+        const address = document.getElementById('house-address').value;
+        const price = document.getElementById('house-price').value;
+        const contact = document.getElementById('house-contact').value;
+        const images = document.getElementById('house-image').value.split(',');
+
+        if (id && address && price && contact && images.length > 0) {
+            const newHouse = {
+                id: parseInt(id),
+                address,
+                price: parseFloat(price),
+                contact,
+                imageUrls: images
+            };
+
+            fetch('/dmo2_war_exploded/get-houses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newHouse)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        fetchHouses();
+                        closeModal();
+                        showAlert('房屋新增成功！');
+                    } else {
+                        showAlert('新增房屋失败', true);
+                    }
+                })
+                .catch(() => showAlert('新增失败', true));
+        } else {
+            showAlert('请填写所有字段！', true);
+        }
+    }
+
+    fetchHouses();
+</script>
+</body>
+</html>
